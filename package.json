@@ -1,0 +1,58 @@
+{
+  "name": "regex-visualizer",
+  "displayName": "Regex Visualizer",
+  "description": "Affiche les résultats de regex dans la barre de statut",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.60.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "configuration": {
+      "title": "Regex Visualizer",
+      "properties": {
+        "regexVisualizer.pattern": {
+          "type": "string",
+          "default": "",
+          "description": "Expression régulière à utiliser"
+        },
+        "regexVisualizer.filePath": {
+          "type": "string",
+          "default": "",
+          "description": "Chemin du fichier à analyser"
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "regexVisualizer.setPattern",
+        "title": "Set Regex Pattern"
+      },
+      {
+        "command": "regexVisualizer.setFile",
+        "title": "Set Target File"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.60.0",
+    "@types/node": "^16.x",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "typescript": "^5.0.0"
+  }
+}
