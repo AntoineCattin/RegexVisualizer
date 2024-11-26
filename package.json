@@ -25,11 +25,6 @@
           "type": "string",
           "default": "",
           "description": "Expression régulière à utiliser"
-        },
-        "regexVisualizer.filePath": {
-          "type": "string",
-          "default": "",
-          "description": "Chemin du fichier à analyser"
         }
       }
     },
@@ -37,10 +32,6 @@
       {
         "command": "regexVisualizer.setPattern",
         "title": "Set Regex Pattern"
-      },
-      {
-        "command": "regexVisualizer.setFile",
-        "title": "Set Target File"
       }
     ]
   },

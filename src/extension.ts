@@ -21,33 +21,6 @@ export function activate(context: vscode.ExtensionContext) {
         }
     });
 
-    // Commande pour définir le fichier cible
-    let setFileCommand = vscode.commands.registerCommand('regexVisualizer.setFile', async () => {
-        const input = await vscode.window.showInputBox({
-            prompt: 'Entrez le chemin relatif du fichier',
-            placeHolder: 'ex: .env ou src/config/.env'
-        });
-
-        if (input) {
-            const workspaceFolders = vscode.workspace.workspaceFolders;
-            if (!workspaceFolders) {
-                vscode.window.showErrorMessage('Aucun workspace ouvert');
-                return;
-            }
-
-            const workspaceRoot = workspaceFolders[0].uri.fsPath;
-            const absolutePath = path.join(workspaceRoot, input);
-
-            if (!fs.existsSync(absolutePath)) {
-                vscode.window.showErrorMessage(`Le fichier ${input} n'existe pas`);
-                return;
-            }
-
-            await vscode.workspace.getConfiguration().update('regexVisualizer.filePath', absolutePath, true);
-            updateStatusBar();
-        }
-    });
-
     // Observer les changements de configuration
     context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(e => {
         if (e.affectsConfiguration('regexVisualizer')) {
@@ -57,15 +30,13 @@ export function activate(context: vscode.ExtensionContext) {
 
     // Observer les changements de fichier
     context.subscriptions.push(vscode.workspace.onDidSaveTextDocument(document => {
-        const config = vscode.workspace.getConfiguration('regexVisualizer');
-        const targetPath = config.get<string>('filePath');
-        if (targetPath && document.uri.fsPath === targetPath) {
+        const activeEditor = vscode.window.activeTextEditor;
+        if (activeEditor && activeEditor.document.uri.fsPath === document.uri.fsPath) {
             updateStatusBar();
         }
     }));
 
     context.subscriptions.push(setPatternCommand);
-    context.subscriptions.push(setFileCommand);
 
     // Initialiser la barre de statut
     updateStatusBar();
@@ -74,10 +45,19 @@ export function activate(context: vscode.ExtensionContext) {
 function updateStatusBar() {
     const config = vscode.workspace.getConfiguration('regexVisualizer');
     const pattern = config.get<string>('pattern');
-    const filePath = config.get<string>('filePath');
+    
+    // Obtenir le document actif
+    const activeEditor = vscode.window.activeTextEditor;
+    if (!activeEditor) {
+        statusBarItem.text = '$(regex) Regex: Aucun fichier ouvert';
+        statusBarItem.show();
+        return;
+    }
 
-    if (!pattern || !filePath) {
-        statusBarItem.text = '$(regex) Regex: Non configuré';
+    const filePath = activeEditor.document.uri.fsPath;
+
+    if (!pattern) {
+        statusBarItem.text = '$(regex) Regex: Pattern non configuré';
         statusBarItem.show();
         return;
     }
