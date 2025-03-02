@@ -25,13 +25,22 @@
           "type": "string",
           "default": "",
           "description": "Expression régulière à utiliser"
+        },
+        "regexVisualizer.filePath": {
+          "type": "string",
+          "default": "",
+          "description": "Chemin du fichier à analyser (relatif à l'espace de travail)"
         }
       }
     },
     "commands": [
       {
         "command": "regexVisualizer.setPattern",
-        "title": "Set Regex Pattern"
+        "title": "Regex Visualizer: Set Regex Pattern"
+      },
+      {
+        "command": "regexVisualizer.setFilePath",
+        "title": "Regex Visualizer: Set File Path"
       }
     ]
   },
